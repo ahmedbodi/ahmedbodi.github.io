@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_config.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>test_config.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">CoinDice.app</span> <span class="kn">import</span> <span class="n">create_app</span>
+<span class="kn">from</span> <span class="nn">CoinDice.settings</span> <span class="kn">import</span> <span class="n">ProdConfig</span><span class="p">,</span> <span class="n">DevConfig</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>This Tests Our Production Config
+Tests Our Production Config.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">test_production_config</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">ProdConfig</span><span class="p">)</span> <span class="c"># This Initiates Our Application Using Our Production Config</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ENV&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;prod&#39;</span> <span class="c"># If In Production The Enviroment Must Be &#39;prod&#39;</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;DEBUG&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span> <span class="c"># Its Unsage to be in Debug Mode As We Expose Sessions, Code and Variables</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;DEBUG_TB_ENABLED&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span> <span class="c"># This Will Give Users Un-Needed Info Which Is Definitely Unwanted For a Security Orientated Application</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ASSETS_DEBUG&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span>  <span class="c"># As Above</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Tests Our Development Config.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">test_dev_config</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">DevConfig</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ENV&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;dev&#39;</span> <span class="c"># When Developing We Want to Be Able To Use The Full Range Of Tools</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;DEBUG&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">True</span> <span class="c"># When Developing its easier having debug enabled so we can see all the issues</span>
+    <span class="k">assert</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ASSETS_DEBUG&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">True</span> <span class="c"># As Above</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

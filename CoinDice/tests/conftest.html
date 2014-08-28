@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>conftest.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>conftest.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Defines fixtures available to all tests.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">flask.ext.webtest</span> <span class="kn">import</span> <span class="n">TestApp</span>
+<span class="kn">from</span> <span class="nn">CoinDice</span> <span class="kn">import</span> <span class="n">app</span> <span class="k">as</span> <span class="n">app1</span>
+<span class="kn">from</span> <span class="nn">CoinDice.settings</span> <span class="kn">import</span> <span class="n">TestConfig</span>
+<span class="kn">from</span> <span class="nn">CoinDice.app</span> <span class="kn">import</span> <span class="n">create_app</span>
+<span class="kn">from</span> <span class="nn">CoinDice.database</span> <span class="kn">import</span> <span class="n">db</span> <span class="k">as</span> <span class="n">_db</span>
+<span class="kn">from</span> <span class="nn">.factories</span> <span class="kn">import</span> <span class="n">UserFactory</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Our CoinDice Application.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@pytest.yield_fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s">&#39;function&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">app</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">_app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">TestConfig</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">_app</span><span class="o">.</span><span class="n">test_request_context</span><span class="p">()</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+
+    <span class="k">yield</span> <span class="n">_app</span>
+
+    <span class="n">ctx</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>A Webtest application.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s">&#39;session&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">testapp</span><span class="p">(</span><span class="n">app</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">TestApp</span><span class="p">(</span><span class="n">app</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>SQLAlchemy DB For use in RAW SQL Queries OR Models.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@pytest.yield_fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s">&#39;function&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">app</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">_db</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+        <span class="n">_db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
+
+    <span class="k">yield</span> <span class="n">_db</span>
+
+    <span class="n">_db</span><span class="o">.</span><span class="n">drop_all</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>A Simple User Fixture For Passing to required test functions.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@pytest.fixture</span>
+<span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="n">db</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">user</span> <span class="o">=</span> <span class="n">UserFactory</span><span class="p">(</span><span class="n">password</span><span class="o">=</span><span class="s">&#39;myprecious&#39;</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">user</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

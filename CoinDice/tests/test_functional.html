@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_functional.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>test_functional.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Functional tests using WebTest.</p>
+<p>See: http://webtest.readthedocs.org/</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">session</span>
+
+
+<span class="kn">from</span> <span class="nn">CoinDice.user.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.factories</span> <span class="kn">import</span> <span class="n">UserFactory</span><span class="p">,</span> <span class="n">GuestFactory</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">binascii</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Test Our Web Login Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestLoggingIn</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_can_log_in_returns_200</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">)</span>		<span class="c"># Goes to Login Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;loginForm&#39;</span><span class="p">]</span>		<span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span>	<span class="c"># Enters Our Username</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;myprecious&#39;</span> 	<span class="c"># Enters Our Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span><span class="o">.</span><span class="n">follow</span><span class="p">()</span>		<span class="c"># Follows the Dedirect Location</span>
+        <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>		<span class="c"># HTTP 200 == Success</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_alert_on_log_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">)</span>				<span class="c"># Goes to Login Paghe</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;loginForm&#39;</span><span class="p">]</span>				<span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span>			<span class="c"># Enters Our Username </span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;myprecious&#39;</span>				<span class="c"># Enters Our Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span><span class="o">.</span><span class="n">follow</span><span class="p">()</span>				<span class="c"># Submits and Follows the Redirect</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;public.logout&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">follow</span><span class="p">()</span>	<span class="c"># Goes to the LogOut Page</span>
+        <span class="k">assert</span> <span class="s">&#39;You are logged out.&#39;</span> <span class="ow">in</span> <span class="n">res</span>			<span class="c"># Since We Logged Our We Should see the Error</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_error_message_if_password_is_incorrect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">)</span>		<span class="c"># Goes to the login page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;loginForm&#39;</span><span class="p">]</span>		<span class="c"># Fills in the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span>	<span class="c"># Enters Our Username</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;wrong&#39;</span>		<span class="c"># Enters an Invalid Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>			<span class="c"># Submits the Form</span>
+        <span class="k">assert</span> <span class="s">&quot;Invalid password&quot;</span> <span class="ow">in</span> <span class="n">res</span>	<span class="c"># Since its invalid it should throw an invalid password error</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_error_message_if_username_doesnt_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">)</span>		<span class="c"># Goes the Login Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;loginForm&#39;</span><span class="p">]</span>		<span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;unknown&#39;</span>		<span class="c"># Fills in an Invalid Username</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;myprecious&#39;</span>		<span class="c"># Fills in a valid Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>			<span class="c"># Submits the Form</span>
+        <span class="k">assert</span> <span class="s">&quot;Unknown user&quot;</span> <span class="ow">in</span> <span class="n">res</span>		<span class="c"># Since the username doesnt exist we should get an unknown user error</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestRegistering</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_can_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">old_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>		<span class="c"># Query the User Count Before Registering Again</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>				<span class="c"># Visits the HomePage</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s">&quot;Register&quot;</span><span class="p">)</span>			<span class="c"># Clicks The register Button</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&quot;registerForm&quot;</span><span class="p">]</span>		<span class="c"># Fills out the registration Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foobar&#39;</span>			<span class="c"># Username</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foo@bar.com&#39;</span>			<span class="c"># Email</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>			<span class="c"># Password</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;confirm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>			<span class="c"># Confirmed Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span><span class="o">.</span><span class="n">follow</span><span class="p">()</span>			<span class="c"># Submits the form then follows the redirect</span>
+        <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>			<span class="c"># If Successful we should recieve a HTTP 200 Status Code</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="o">==</span> <span class="n">old_count</span> <span class="o">+</span> <span class="mi">1</span>	<span class="c"># Our User count should increase as we now have a new user</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_error_message_if_passwords_dont_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&quot;public.register&quot;</span><span class="p">))</span>	<span class="c"># Goes to Registration Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&quot;registerForm&quot;</span><span class="p">]</span>		<span class="c"># Fills Out Registration Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foobar&#39;</span>			<span class="c"># Enters Out Username</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foo@bar.com&#39;</span>			<span class="c"># Enters Out Email</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>			<span class="c"># Enters out Password</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;confirm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secrets&#39;</span>			<span class="c"># Enters our Password Confirmation ------ INCORRECT!!!! -------</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>				<span class="c"># Submits the User Registration Form</span>
+        <span class="k">assert</span> <span class="s">&quot;Passwords must match&quot;</span> <span class="ow">in</span> <span class="n">res</span>		<span class="c"># Since Passwords dont match we should get an appropriate error message</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_error_message_if_user_already_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">UserFactory</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  			<span class="c"># Creates a new user</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>						<span class="c"># Saves Our User</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&quot;public.register&quot;</span><span class="p">))</span>		<span class="c"># Goes to Registration Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&quot;registerForm&quot;</span><span class="p">]</span>			<span class="c"># Fills Our Register Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span>			<span class="c"># Uses the Username We Already Used</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foo@bar.com&#39;</span>				<span class="c"># Uses the Email Our Factory Used</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>				<span class="c"># Uses the Password Our Factory Used</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;confirm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;secret&#39;</span>				<span class="c"># Confirms Password</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>					<span class="c"># Submits the Form</span>
+        <span class="k">assert</span> <span class="s">&quot;Username already registered&quot;</span> <span class="ow">in</span> <span class="n">res</span>		<span class="c"># As the User is already registered We Should see an approprate error</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Test Our Web Guest Login Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestGuestLoggingIn</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_guest_can_log_in_returns_200</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/welcome&quot;</span><span class="p">)</span>           <span class="c"># Goes to Login Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;guestForm&#39;</span><span class="p">]</span>      	<span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;guest101&#39;</span>        	<span class="c"># Enters Our Guest Username</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span><span class="o">.</span><span class="n">follow</span><span class="p">()</span>            <span class="c"># Follows the Dedirect Location</span>
+        <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>           <span class="c"># HTTP 200 == Success</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_sees_error_message_if_guest_already_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+	<span class="n">user</span> <span class="o">=</span> <span class="n">GuestFactory</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>	<span class="c"># Generate a user with another random username</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>                                                     <span class="c"># Saves that User                         </span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/welcome&quot;</span><span class="p">)</span>           			<span class="c"># Goes to Guest Login Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;guestForm&#39;</span><span class="p">]</span>   				<span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span>        			<span class="c"># Enters Our Guest Username</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>		            			<span class="c"># Follows the Dedirect Location</span>
+        <span class="k">assert</span> <span class="s">&quot;Guest Username Already In Use&quot;</span> <span class="ow">in</span> <span class="n">res</span>			<span class="c"># HTTP 200 == Success</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Test Our Web Guest SetPassword Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestGuestSetPassword</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_guest_can_set_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">testapp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/welcome&quot;</span><span class="p">)</span>           <span class="c"># Goes to Login Page</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;guestForm&#39;</span><span class="p">]</span>           <span class="c"># Grabs the Login Form</span>
+        <span class="n">form</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;guest101&#39;</span>           <span class="c"># Enters Our Guest Username</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>		        <span class="c"># Follows the Dedirect Location</span>
+	<span class="n">ac</span> <span class="o">=</span> <span class="n">testapp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/user/account&quot;</span><span class="p">)</span> 	<span class="c"># Visit Our Edit Account Page</span>
+	<span class="n">ac_form</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">forms</span><span class="p">[</span><span class="s">&#39;EditAccountForm&#39;</span><span class="p">]</span>	<span class="c"># Grabs Our Edit Account Page</span>
+	<span class="n">ac_form</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s">&#39;guest12&#39;</span>		<span class="c"># Sets Our Password</span>
+	<span class="n">ac_form</span><span class="o">.</span><span class="n">confirm</span> <span class="o">=</span> <span class="s">&#39;guest12&#39;</span>		<span class="c"># Confirms Our Password</span>
+	<span class="n">ac_res</span> <span class="o">=</span> <span class="n">ac_form</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>		<span class="c"># Submits Our Form</span>
+	<span class="k">assert</span> <span class="n">ac_res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>	<span class="c"># HTTP 200 == success as expected</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

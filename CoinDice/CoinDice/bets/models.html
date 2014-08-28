@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>models.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>models.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">datetime</span> <span class="kn">as</span> <span class="nn">dt</span>
+<span class="kn">from</span> <span class="nn">CoinDice.database</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Column</span><span class="p">,</span>
+    <span class="n">db</span><span class="p">,</span>
+    <span class="n">Model</span><span class="p">,</span>
+    <span class="n">ReferenceCol</span><span class="p">,</span>
+    <span class="n">relationship</span><span class="p">,</span>
+    <span class="n">SurrogatePK</span><span class="p">,</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Our Bets Table</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Bets</span><span class="p">(</span><span class="n">SurrogatePK</span><span class="p">,</span> <span class="n">Model</span><span class="p">):</span>
+    <span class="n">bet_id</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c"># Our Bet ID Number</span>
+    <span class="n">user_id</span>    <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>		 <span class="c"># Our User ID Number</span>
+    <span class="n">bet_time</span>   <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span> <span class="c"># DT Bet was placed</span>
+    <span class="n">bet_amount</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>				 <span class="c"># Bet Amount</span>
+    <span class="n">payout</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>				 <span class="c"># Total Winnings</span>
+    <span class="n">game</span>       <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>				 <span class="c"># Required Number</span>
+    <span class="n">roll</span>       <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>				 <span class="c"># Number Rolled</span>
+    <span class="n">profit</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>				 <span class="c"># Total Profit</span>
+    <span class="n">result</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>				 <span class="c"># Win/Lose</span>
+    <span class="n">s_seed</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>				 <span class="c"># Server Seed</span>
+    <span class="n">c_seed</span>     <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>				 <span class="c"># Client Seed</span>
+    <span class="n">nonce</span>      <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span>				 <span class="c"># Game Nonce</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;Bet({bet_id})&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bet_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bet_id</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Seeds</span><span class="p">(</span><span class="n">SurrogatePK</span><span class="p">,</span> <span class="n">Model</span><span class="p">):</span>
+    <span class="n">server_seed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c"># Server Seed</span>
+    <span class="n">hashed_seed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>	     <span class="c"># Hashed Seed</span>
+    <span class="n">start_time</span>  <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">)</span>				     <span class="c"># DT in use </span>
+    <span class="n">end_time</span>    <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">)</span>				     <span class="c"># DT finished</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

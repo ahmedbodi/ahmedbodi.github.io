@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>utils.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>utils.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="sd">&#39;&#39;&#39;Helper utilities and decorators.&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">flash</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="kn">from</span> <span class="nn">CoinDice.settings</span> <span class="kn">import</span> <span class="n">ProdConfig</span>
+<span class="kn">from</span> <span class="nn">bitcoinrpc.authproxy</span> <span class="kn">import</span> <span class="n">AuthServiceProxy</span>
+<span class="kn">import</span> <span class="nn">uuid</span><span class="o">,</span> <span class="nn">base64</span><span class="o">,</span> <span class="nn">hashlib</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">hmac</span><span class="o">,</span> <span class="nn">random</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">generate_server_seed</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Generate a seed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">serverseed</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">serverseed</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Now Hash It</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">hashedserverseed</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha512</span><span class="p">(</span><span class="n">serverseed</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">serverseedtime</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">serverseed</span><span class="p">,</span> <span class="n">serverseedtime</span><span class="p">,</span> <span class="n">hashedserverseed</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Function used to generate random strings especially for username's
+Returns a random string of length string_length.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">my_random_string</span><span class="p">(</span><span class="n">string_length</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>     <span class="n">random</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="c"># Convert UUID format to a Python string.</span>
+     <span class="n">random</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="c"># Make all characters uppercase.</span>
+     <span class="n">random</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">)</span> <span class="c"># Remove the UUID &#39;-&#39;.</span>
+     <span class="k">return</span> <span class="n">random</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">string_length</span><span class="p">]</span> <span class="c"># Return the random string.</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Show All Error's on the HTML Page</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">flash_errors</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s">&quot;warning&quot;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Flash all errors for a form.&#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="n">flash</span><span class="p">(</span><span class="s">&quot;{0}&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">),</span> <span class="n">category</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Send all RPC Calls using this function to the coind
+E.G. send_rpc_command('getinfo')
+E.G. send_rpc_command('getbalance', 'test1')</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">send_rpc_command</span><span class="p">(</span><span class="n">call_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">access</span> <span class="o">=</span> <span class="n">ServiceProxy</span><span class="p">(</span><span class="n">ProdConfig</span><span class="o">.</span><span class="n">RPC_URL</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">call_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Play the game</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">decide_game</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="n">nonce</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">99999999999</span><span class="p">))</span>		<span class="c"># Generate a random number for the Nonce</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">nonce</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">client_seed</span><span class="p">,</span> <span class="n">nonce</span><span class="p">])</span>		<span class="c"># Concantonate the Nonce, Client Seed and Nonce with a &#39;:&#39;</span>
+    <span class="n">gen_seed</span> <span class="o">=</span> <span class="n">generate_server_seed</span><span class="p">()</span>					<span class="c"># Calls the Generate Server Seed Function</span>
+    <span class="n">server_seed</span> <span class="o">=</span> <span class="n">gen_seed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>						<span class="c"># Uses the First Item From the Generate Server Seed List</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">nonce</span><span class="p">,</span> <span class="n">server_seed</span><span class="p">,</span> <span class="n">nonce</span><span class="p">])</span>				<span class="c"># Concantonate the Nonce, Server Seed and Nonce with a &#39;:&#39;</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha512</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>		<span class="c"># Creates a New Hex Digest of the Message and Key in a HMAC_SHA512 format</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">5</span>								<span class="c"># We want 25 Peices of 5 Chars each</span>
+    <span class="n">x_pieces</span> <span class="o">=</span> <span class="p">[</span><span class="n">digest</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">step</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">digest</span><span class="p">),</span> <span class="n">step</span><span class="p">)]</span>	<span class="c"># We Do the Splits into 25 * 5 + 3 peices</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>							<span class="c"># Creates Our Result Dictionary</span>
+    <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">10.00</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="c"># Creates a Pseudo-Random Number between 0.00 and 10.00 Rounded to 2 places</span>
+    <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;OVER&#39;</span><span class="p">,</span> <span class="s">&#39;UNDER&#39;</span><span class="p">]</span>						<span class="c"># Creates a list with our 2 Possible Game Types</span>
+    <span class="n">res</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>			<span class="c"># Sets the type to a random Choice</span>
+    <span class="n">final_score</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>						<span class="c"># Initiates the final score dict so we can accurately tell which key won</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="p">):</span>						<span class="c"># Iterates through all 25 Choices</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>					<span class="c"># If its a 5 Char Piece run the standard code</span>
+	   <span class="n">part</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="mi">16</span><span class="p">)</span>					<span class="c"># Convers Our HEX Piece to a Base 16 Integer</span>
+	   <span class="k">if</span> <span class="n">part</span> <span class="o">&lt;</span> <span class="mi">1000000</span><span class="p">:</span>						<span class="c"># Tests to see if the Integer is less than 1Million</span>
+	      <span class="n">roll</span> <span class="o">=</span> <span class="n">part</span> <span class="o">/</span>  <span class="mi">100000</span>					<span class="c"># Divides the Integer by 100K to get a value between 0.00 and 10.00</span>
+	      <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;UNDER&quot;</span><span class="p">:</span>				<span class="c"># Tests to see if the game ttpe is under</span>
+		 <span class="k">if</span> <span class="n">roll</span> <span class="o">&lt;</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]:</span>				<span class="c"># Test to see if the rolled number is under the target</span>
+		    <span class="n">res</span><span class="p">[</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> which was a win&quot;</span> <span class="o">%</span> <span class="n">roll</span>	<span class="c"># If so we win</span>
+		    <span class="n">res</span><span class="p">[</span><span class="s">&#39;roll&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roll</span>
+		    <span class="n">res</span><span class="p">[</span><span class="s">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;win&#39;</span>
+		 <span class="k">elif</span> <span class="n">roll</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]:</span>				<span class="c"># Test to see if the number we rolled was higher than our target </span>
+		    <span class="n">res</span><span class="p">[</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> which was a loss&quot;</span> <span class="o">%</span> <span class="n">roll</span> 	<span class="c"># We Lose </span>
+		    <span class="n">res</span><span class="p">[</span><span class="s">&#39;roll&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roll</span>
+		    <span class="n">res</span><span class="p">[</span><span class="s">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;loss&#39;</span>
+	      <span class="k">else</span><span class="p">:</span>							<span class="c"># Our Game Type must be Over</span>
+		  <span class="k">if</span> <span class="n">roll</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]:</span>				<span class="c"># Test to see if the number we rolled was higher than our target</span>
+		     <span class="n">res</span><span class="p">[</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> which was a win&quot;</span> <span class="o">%</span> <span class="n">roll</span>	<span class="c"># As we want higher we won</span>
+		     <span class="n">res</span><span class="p">[</span><span class="s">&#39;roll&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roll</span>
+	 	     <span class="n">res</span><span class="p">[</span><span class="s">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;win&#39;</span>
+		  <span class="k">elif</span> <span class="n">roll</span> <span class="o">&lt;</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">]:</span>				<span class="c"># If we didnt roll Over we rolled under</span>
+		     <span class="n">res</span><span class="p">[</span><span class="n">x_pieces</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> which was a loss&quot;</span> <span class="o">%</span> <span class="n">roll</span>	<span class="c"># We Lost</span>
+		     <span class="n">res</span><span class="p">[</span><span class="s">&#39;roll&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roll</span>
+		     <span class="n">res</span><span class="p">[</span><span class="s">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;loss&#39;</span>
+	      <span class="k">break</span>							<span class="c"># As we&#39;ve had a numver &gt; 1M. We either have a win or a lose so stop iterating		</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>						<span class="c"># Iterate through our result Dict</span>
+	<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">x_pieces</span><span class="p">:</span>						<span class="c"># If Our Winning key is in the char list</span>
+	  <span class="n">final_score</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>					<span class="c"># Then Add Our Key and Value to the Final Score Dict</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">server_seed</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">client_seed</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">],</span> <span class="n">final_score</span><span class="p">,</span> <span class="n">x_pieces</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

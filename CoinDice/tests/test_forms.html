@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_forms.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>test_forms.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">binascii</span>
+<span class="kn">from</span> <span class="nn">CoinDice.public.forms</span> <span class="kn">import</span> <span class="n">LoginForm</span><span class="p">,</span> <span class="n">GuestForm</span>
+<span class="kn">from</span> <span class="nn">CoinDice.user.forms</span> <span class="kn">import</span> <span class="n">RegisterForm</span><span class="p">,</span> <span class="n">SetPasswordForm</span>
+<span class="kn">from</span> <span class="nn">.factories</span> <span class="kn">import</span> <span class="n">UserFactory</span><span class="p">,</span> <span class="n">GuestFactory</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Test Our Guest Login Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestGuestForm</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_user_guest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+	<span class="n">form</span> <span class="o">=</span> <span class="n">GuestForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> 	<span class="c"># Generate a Random Username </span>
+	<span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">True</span> 					<span class="c"># Since We&#39;re a Guest This should be enough so validate should be True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Test Our Guest SetPassword Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestSetPasswordForm</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>As a guest we should be able to change our password</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_guest_password_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+	<span class="n">user</span> <span class="o">=</span> <span class="n">GuestFactory</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> 				<span class="c"># Generate a user with another random username</span>
+	<span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span> 										<span class="c"># Save That User so we can manipulate its password</span>
+	<span class="n">form</span> <span class="o">=</span> <span class="n">SetPasswordForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 	<span class="c"># Now Set It&#39;s Password Using the SetPasswordForm</span>
+	<span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span> 							<span class="c"># Password = None and We are Marked as a guest This should be True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>As a standard User we should NOT be able to change our password</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_user_password_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+	<span class="n">user</span><span class="o">.</span><span class="n">guest</span> <span class="o">=</span> <span class="bp">False</span> 									<span class="c"># We Ensure Our User is NOT a guest</span>
+	<span class="n">form</span> <span class="o">=</span> <span class="n">SetPasswordForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 	<span class="c"># Now we use the form to set our password </span>
+	<span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span> 							<span class="c"># We arent a guest so there should the form should return False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Test Our User Registration Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestRegisterForm</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Test IF a user is already registered wether guest or not </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_user_already_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">&#39;foo@bar.com&#39;</span><span class="p">,</span><span class="c"># Enters Username Thats Already Registered</span>
+            <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 			<span class="c"># Registered Our User Again. This results in an error as our factory which called the test</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Already created our user before passing it to this function</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span>  	   			<span class="c"># So as such this form needs to return False</span>
+        <span class="k">assert</span> <span class="s">&#39;Username already registered&#39;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">errors</span> 	<span class="c"># To ensure we are recieving the correct error we test to ensure the error msg is correct</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Test IF a user has an email registered with the same as us</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_email_already_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>enters email that is already registered</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;unique&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="c"># Registered Our User Again. This results in an error as our factory which called the test</span>
+            <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span>               <span class="c"># Already created our user with a different username before passing it to this function</span>
+
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span>				 <span class="c"># So as such this form needs to return False</span>
+        <span class="k">assert</span> <span class="s">&#39;Email already registered&#39;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">errors</span>   <span class="c"># To ensure we are recieving the correct error we test to ensure the error msg is correct</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Now we test tp see if when we use completely new details the account creation is successful</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;newusername&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">&#39;new@test.test&#39;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span>	<span class="c"># Completely new User With Different Details</span>
+
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">True</span> 			<span class="c"># And This Should return True as we are only checking for unique usernames, passwords and pre-registered users</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Now we test the User Login Form</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestLoginForm</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Test A Successful Login</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 					<span class="c"># We Set Our User&#39;s Password to Example</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>						        <span class="c"># We Save Or Users&#39;s Password</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 	<span class="c"># We Use the Login Form to Login</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">True</span> 					<span class="c"># Now That All Our Details Are Correct We Should be able to login</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">user</span> 				        <span class="c"># Ensure that our logged in user is the same user as the user which was passed to the function</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Test a login with an unregistered Username</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_unknown_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;unknown&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span> <span class="c"># Now we try and Login With Unregistered Details</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span>				 <span class="c"># Our Details are invalid so this should return False</span>
+        <span class="k">assert</span> <span class="s">&#39;Unknown username&#39;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">errors</span>        <span class="c"># Since Our Details we&#39;re invalid Ensure we get the correct error</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">user</span> <span class="ow">is</span> <span class="bp">None</span>			         <span class="c"># If Our Details are wrong a user should not have been found</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Test To see the result with an invalid password</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_invalid_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s">&#39;example&#39;</span><span class="p">)</span> 						<span class="c"># Now We Set Our Password To Ensure it is wrong</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>								<span class="c"># Save Our User to ensure that the Login Will Read the New Password</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;wrongpassword&#39;</span><span class="p">)</span> 	<span class="c"># Now We Log in with Invalid Passwords on Purpose</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span>						<span class="c"># Since Our Details are Wrong Validate should return False</span>
+        <span class="k">assert</span> <span class="s">&#39;Invalid password&#39;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">errors</span>			<span class="c"># And Due to This The Form should return the correct error</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>An Inactive/Disabled User should NOT be able to Login e.g. Abusers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">test_validate_inactive_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="bp">False</span>						<span class="c"># Set the Account to InActive</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s">&#39;example&#39;</span><span class="p">)</span>					<span class="c"># Set Our Password to Example</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>							<span class="c"># Save Our User so the Login can use those</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Correct username and password, but user is not activated</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">form</span> <span class="o">=</span> <span class="n">LoginForm</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;example&#39;</span><span class="p">)</span>	<span class="c"># Use Our Correct Details to Login</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span>					<span class="c"># If the User is InActive It Should return False</span>
+        <span class="k">assert</span> <span class="s">&#39;User not activated&#39;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">errors</span>		<span class="c"># Since Its InActive we should get an Appropriate Error Msg</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>settings.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>settings.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
+
+<span class="n">os_env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>The Base Config For Inheritence</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s">&#39;Som3thingS3cret&#39;</span>  					<span class="c"># TODO: Change me</span>
+    <span class="n">APP_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>		<span class="c"># This directory</span>
+    <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_DIR</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">))</span> 	<span class="c"># Our Project Dir</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">13</span>						<span class="c"># How many rounds to hash our password</span>
+    <span class="n">ASSETS_DEBUG</span> <span class="o">=</span> <span class="bp">False</span>  						<span class="c"># We dont want to Debug Unless Explicitly Enabled</span>
+    <span class="n">DEBUG_TB_ENABLED</span> <span class="o">=</span> <span class="bp">False</span>						<span class="c"># Disable Debug toolbar</span>
+    <span class="n">DEBUG_TB_INTERCEPT_REDIRECTS</span> <span class="o">=</span> <span class="bp">False</span>				<span class="c"># Disable Debug Toolbar</span>
+    <span class="n">CACHE_TYPE</span> <span class="o">=</span> <span class="s">&#39;simple&#39;</span>  						<span class="c"># Can be &quot;memcached&quot;, &quot;redis&quot;, etc.</span>
+    <span class="n">RPC_URL</span> <span class="o">=</span> <span class="s">&#39;http://username:password@127.0.0.1:8001&#39;</span>			<span class="c"># Our Bitcoind RPC URL</span>
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>The Production Config
+Production configuration.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ProdConfig</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">ENV</span> <span class="o">=</span> <span class="s">&#39;prod&#39;</span>							<span class="c"># Production Enviroment</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s">&#39;postgresql://localhost/example&#39;</span>  	<span class="c"># Our DB Location and Provider</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Development configuration.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">DevConfig</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">ENV</span> <span class="o">=</span> <span class="s">&#39;dev&#39;</span>								<span class="c"># Development Enviroment</span>
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>							<span class="c"># Debug Away</span>
+    <span class="n">DB_NAME</span> <span class="o">=</span> <span class="s">&#39;dev.db&#39;</span>							<span class="c"># Our SQLite DB</span>
+    <span class="n">DB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="n">DB_NAME</span><span class="p">)</span>		<span class="c"># DB Path</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s">&#39;sqlite:///{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span>		<span class="c"># SQLAlchemy URL</span>
+    <span class="n">DEBUG_TB_ENABLED</span> <span class="o">=</span> <span class="bp">True</span>						<span class="c"># Enabled Assets Toolbar</span>
+    <span class="n">ASSETS_DEBUG</span> <span class="o">=</span> <span class="bp">True</span>  						<span class="c"># Don&#39;t bundle/minify static assets</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">TestConfig</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
+    <span class="n">TESTING</span> <span class="o">=</span> <span class="bp">True</span>							<span class="c"># In Test Mode</span>
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>							<span class="c"># Debug Here</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s">&#39;sqlite://&#39;</span>				<span class="c"># No Database Needed</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">1</span>  						<span class="c"># For faster tests</span>
+    <span class="n">WTF_CSRF_ENABLED</span> <span class="o">=</span> <span class="bp">False</span>  						<span class="c"># Allows form testing</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
